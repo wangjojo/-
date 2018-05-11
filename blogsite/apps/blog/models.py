@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 
 from users.models import UserProfile
@@ -5,6 +7,7 @@ from users.models import UserProfile
 class Category(models.Model):
     name = models.CharField(max_length=20,verbose_name='类别')
     nav_display = models.BooleanField(default=True,verbose_name='是否导航显示')
+    add_time = models.DateTimeField(default=datetime.now,verbose_name='添加时间')
 
     class Meta:
         verbose_name = "分类"
@@ -16,7 +19,8 @@ class Category(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=20,verbose_name='标签')
-
+    add_time = models.DateTimeField(auto_now_add=True,verbose_name='添加时间')
+    
     class Meta:
         verbose_name = "标签"
         verbose_name_plural = verbose_name
@@ -46,7 +50,3 @@ class Blog(models.Model):
 
     def __str__(self):
         return self.title
-    
-    
-
-    
