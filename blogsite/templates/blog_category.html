@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}
+  {{ category.name }} | wangjojo的博客
+{% endblock title %}
+
+{% block article %}
+    <div class="am-u-md-8 am-u-sm-12">
+    {% for blog in blogs %}
+        <article class="am-g blog-entry-article">
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+                <img src="{{ MEDIA_URL}}{{ blog.image }}" alt="" class="am-u-sm-12">
+            </div>
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
+                <span><a href="{% url 'blog:blog_detail' blog.id %}" class="blog-color">{{ blog.category.name }} &nbsp;</a></span>
+                <span> @amazeUI &nbsp;</span>
+                <span>{{ blog.add_time }}</span>
+                <h1><a href="">{{ blog.title }}</a></h1>
+                <p>
+                    {{ blog.content|slice:'100' }}
+                </p>
+                <p><a href="{% url 'blog:blog_detail' blog.id %}">continue reading</a></p>
+            </div>
+        </article>        
+    {% endfor %}
+
+        
+        <ul class="am-pagination">
+          <li class="am-pagination-prev"><a href="">&laquo; Prev</a></li>
+          <li class="am-pagination-next"><a href="">Next &raquo;</a></li>
+        </ul>
+    </div>
+{% endblock article %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% block title %}
+  首页 | wangjojo的博客
+{% endblock title %}
+
+{% block banner %}
+<div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-article-margin">
+    <div data-am-widget="slider" class="am-slider am-slider-b1" data-am-slider='{&quot;controlNav&quot;:false}' >
+    <ul class="am-slides">
+      <li>
+            <img src="{% static 'images/b1.jpg' %}">
+            <div class="blog-slider-desc am-slider-desc ">
+                <div class="blog-text-center blog-slider-con">
+                    <span><a href="" class="blog-color">Article &nbsp;</a></span>               
+                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
+                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
+                    </p>
+                    <span class="blog-bor">2015/10/9</span>
+             
+                </div>
+            </div>
+      </li>
+
+    </ul>
+    </div>
+</div>
+{% endblock banner %}
+<!-- content srart -->
+{% block article %}
+    <div class="am-u-md-8 am-u-sm-12">
+        {% for blog in blogs %}
+        <article class="am-g blog-entry-article">
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
+
+                <img src="{{MEDIA_URL}}{{ blog.image }}" alt="" class="am-u-sm-12">
+            </div>
+            <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
+                <span><a href="{% url 'blog:blog_category' blog.category.id %}" class="blog-color">{{ blog.category.name}} &nbsp;</a></span>
+                <span> @amazeUI &nbsp;</span>
+                <span>{{ blog.add_time }}</span>
+                <h1><a href="{% url 'blog:blog_detail' blog.id %}">{{ blog.title}}</a></h1>
+                <p>{{ blog.content|slice:'100' }}
+                </p>
+                <p><a href="{% url 'blog:blog_detail' blog.id %}">continue reading</a></p>
+            </div>
+        </article>
+        {% endfor %}
+
+        <ul class="am-pagination">
+          <li class="am-pagination-prev"><a href="">&laquo; Prev</a></li>
+          <li class="am-pagination-next"><a href="">Next &raquo;</a></li>
+        </ul>
+    </div>        
+{% endblock article %}

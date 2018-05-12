@@ -28,9 +28,9 @@ class BlogAdmin(object):
     '''
         Admin View for Blog
     '''
-    list_display = ('title','excerpt','content','author','tags','category','is_pub','image','fav_nums','click_nums','add_time','update_time')
-    search_fields = ('title','excerpt','content','author','tags','category','is_pub','image','fav_nums','click_nums')
-    list_filter = ('title','excerpt','content','author__username','tags__name','category__name','is_pub','image','fav_nums','click_nums','add_time','update_time')
+    list_display = ('title','excerpt','author','tags','category','is_pub','image','fav_nums','click_nums','add_time','update_time')
+    search_fields = ('title','excerpt','author','tags','category','is_pub','image','fav_nums','click_nums')
+    list_filter = ('title','excerpt','author','tags__name','category__name','is_pub','image','fav_nums','click_nums','add_time','update_time')
     
 
 xadmin.site.register(Category,CategoryAdmin)

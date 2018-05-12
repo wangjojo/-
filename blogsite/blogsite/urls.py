@@ -13,10 +13,24 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
-from django.conf.urls import url
+from django.conf.urls import url,include
 from django.contrib import admin
+from django.views.static import serve
+
+
 import xadmin
+from users.views import IndexView
+from blogsite.settings import MEDIA_ROOT
 
 urlpatterns = [
-    url(r'^xadmin/', xadmin.site.urls),
+    url(r'^admin/', xadmin.site.urls,name = 'admin'),
+    #首页
+    url(r'^$',IndexView.as_view(),name = 'index'),
+
+    #blog相关
+    url(r'^blog/',include('blog.urls',namespace = 'blog')),
+    #上传文件访问地址
+    url(r'^media/(?P<path>.*)/$',serve,{"document_root":MEDIA_ROOT}),
+
+
 ]
