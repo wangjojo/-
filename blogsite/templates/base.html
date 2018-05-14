@@ -33,13 +33,29 @@
       <ul>
           <li class=""><a href="{% url 'index' %}"><span>首页</span></a></li>
           <li class='has-sub'><a href='#'><span>分类</span></a>
-          <ul>
-            {% for category in home_display_categorys %}
-              <li><a href="{% url 'blog:blog_category' category.id %}"><span>{{ category.name }}</span></a></li>
-            {% endfor %}  
-          </ul>
-              <li><a href='single.html'><span>About</span></a></li>
-              <li class='last'><a href='/admin/'><span>管理</span></a></li>
+            <ul>
+              {% for category in home_display_categorys %}
+                <li><a href="{% url 'blog:blog_category' category.id %}"><span>{{ category.name }}</span></a></li>
+              {% endfor %}  
+            </ul>
+          
+          {% if request.user.is_authenticated %}
+            <li class='has-sub'><a href='#'><span>{{ request.user.username }}</span></a>
+              <ul>
+                  <li><a href="">进入个人中心</a></li>
+                  <li><a href="{% url 'logout' %}">退出</a></li>   
+              </ul>
+            </li>
+          {% else %}
+            <li class='has-sub'><a href='#'><span>用户</span></a>
+              <ul>
+                  <li><a href="{% url 'login' %}">登录</a></li>
+                  <li><a href="{% url 'register' %}">注册</a></li>                
+              </ul>
+            </li>   
+          {% endif %}
+
+          <li class='last'><a href='/admin/'><span>管理</span></a></li>
 
           <form class="am-topbar-form am-topbar-right am-form-inline" role="search">
               <div class="am-form-group">

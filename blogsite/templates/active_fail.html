@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+    <meta charset="UTF-8">
+    <title>激活失败</title>
+    <link rel="stylesheet" href="{% static 'css/amazeui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+<body>
+    <form class="am-form">
+      <fieldset>
+        <legend>用户信息</legend>
+
+        <div class="am-form-group">
+          <label for="doc-ipt-email-1">邮件</label>
+          <input type="email" class="" id="doc-ipt-email-1" placeholder="输入电子邮件">
+        </div>
+
+        <div class="am-form-group">
+          <label for="doc-ipt-pwd-1">密码</label>
+          <input type="password" class="" id="doc-ipt-pwd-1" placeholder="输入密码">
+        </div>
+        <button type="submit" class="am-btn am-btn-primary" id="my-popover">提交</button>
+      </fieldset>
+    </form>
+
+<script src="{% static 'js/amazeui.min.js' %}"></script>
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+<script>
+$(function() {
+  $('#my-popover').popover({
+    content: '邮件已重新发送'
+  })
+});
+</script>
+</body>
+</html>

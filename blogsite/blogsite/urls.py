@@ -19,13 +19,29 @@ from django.views.static import serve
 
 
 import xadmin
-from users.views import IndexView
+from users.views import *
 from blogsite.settings import MEDIA_ROOT
 
 urlpatterns = [
     url(r'^admin/', xadmin.site.urls,name = 'admin'),
+    #验证码
+    url(r'^captcha/',include('captcha.urls')),
     #首页
     url(r'^$',IndexView.as_view(),name = 'index'),
+    #登录
+    url(r'^login/$',LoginView.as_view(),name = 'login'),   
+    #登出
+    url(r'^logout/$',LogoutView.as_view(),name = 'logout'),   
+    #注册
+    url(r'^register/$',RegisterView.as_view(),name = 'register'),
+    #激活用户
+    url(r'^active/(?P<email_code>.*)/$',ActiveUserView.as_view(),name = 'active'),
+    #忘记密码
+    url(r'^forget/$',ForgetPwdView.as_view(),name = 'forget'),
+    #重置链接
+    url(r'^reset/(?P<reset_code>.*)/$',ResetView.as_view(),name = 'reset'),
+    #修改密码
+    url(r'^reset_pwd/$',ResetPwdView.as_view(),name = 'reset_pwd'),
 
     #blog相关
     url(r'^blog/',include('blog.urls',namespace = 'blog')),
