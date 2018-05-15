@@ -8,5 +8,6 @@ from .views import *
 urlpatterns = [
     url(r'^detail/(?P<blog_id>\d+)/$',BlogDetailView.as_view(),name = 'blog_detail'),
     url(r'^category/(?P<category_id>\d+)/$',BlogCategoryView.as_view(),name = 'blog_category'),
+    url(r'^author/(?P<author_id>\d+)/$',BlogAuthorView.as_view(),name = 'blog_author'),
 
 ]

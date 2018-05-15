@@ -1,3 +1,214 @@
 from django.shortcuts import render
+from django.views.generic import View
+from django.http import HttpResponse
+import json
+from django.contrib.auth.hashers import make_password
+
+from utils.mixin_untils import LoginRequiredMixin
+from utils.email_send import send_user_email
+from .forms import *
+from users.models import UserProfile,EmailVerifyRecord
+from blog.models import Blog,Category,Tag
+from .models import UserFav,UserMessage
 
 # Create your views here.
+class AddFavView(View):
+    def post(self,request):
+        fav_id = int(request.POST.get('fav_id',0))
+        fav_type = int(request.POST.get('fav_type',0))
+
+        #检查用户是否登录
+        if not request.user.is_authenticated():
+            return HttpResponse('{"status":"fail","msg":"用户未登录"}',content_type = 'application/json')
+
+        exist_record = UserFav.objects.filter(user = request.user,fav_id = fav_id,fav_type = fav_type)
+        #如果记录存在视为取消收藏
+        if exist_record:
+            exist_record.delete()
+            return HttpResponse('{"status":"success","msg":"取消收藏成功"}',content_type = 'application/json')
+        else:
+            user_fav = UserFav()
+            if fav_id > 0 and fav_type > 0:
+                user_fav.user = request.user
+                user_fav.fav_id = fav_id
+                user_fav.fav_type = fav_type
+                user_fav.save()
+                return HttpResponse('{"status":"success","msg":"收藏成功"}',content_type = 'application/json')
+            else:
+                return HttpResponse('{"status":"fail","msg":"收藏出错"}',content_type = 'application/json')
+
+
+
+class UserInfoView(LoginRequiredMixin,View):
+    '''
+    用户信息中心
+    '''
+    def get(self,request):
+        return render(request,'usercenter.html',{})
+
+    def post(self,request):
+        user_form = UserInfoForm(request.POST,instance = request.user)
+        print('a')
+        if user_form.is_valid():
+            request.user.save()
+            print('b')
+            return HttpResponse('{"status":"success","msg":"修改成功"}',content_type = 'application/json')
+        else:
+            print('c')
+            return HttpResponse(json.dumps(user_form.errors),content_type = 'application/json')
+
+class UserImageView(LoginRequiredMixin,View):
+    '''
+    用户修改头像
+    '''
+    def post(self,request):
+        user_image = UserImageForm(request.POST,request.FILES,instance=request.user)
+        if user_image.is_valid():
+            request.user.save()
+
+            return HttpResponse('{"status":"success","msg":"修改成功"}',content_type = 'application/json')
+        else:
+            return HttpResponse('{"status":"fail","msg":"修改失败"}',content_type = 'application/json')
+
+
+class UpdatePwdView(LoginRequiredMixin,View):
+    '''
+    用户修改密码
+    '''
+    def post(self,request):
+        pwd_form = ModifyPwdForm(request.POST)
+
+        if pwd_form.is_valid():
+            password1 = pwd_form.cleaned_data['password1']
+            password2 = pwd_form.cleaned_data['password2']
+
+            if password1 == password2:
+                user = request.user
+                user.password = make_password(password1)
+                user.save()
+
+                return HttpResponse('{"status":"success","msg":"修改成功"}',content_type = 'application/json')
+            else:
+                return HttpResponse('{"status":"fail","msg":"两次密码不一致"}',content_type = 'application/json')
+        else:
+            return HttpResponse(json.dumps(pwd_form.errors),content_type = 'application/json')
+
+
+class SendEmailCodeView(LoginRequiredMixin,View):
+    '''
+    用户修改邮箱验证码
+    '''
+    def get(self,request):
+        email = request.GET.get('email','')
+        if UserProfile.objects.filter(email = email):
+            return HttpResponse('{"email":"邮箱已经注册"}',content_type = 'application/json')
+
+        send_user_email(email = email,send_type='update_email')
+        return HttpResponse('{"status":"success","msg":"邮件发送成功"}',content_type = 'application/json')
+
+
+class UpdateEmailView(LoginRequiredMixin,View):
+    '''
+    用户修改邮箱
+    '''
+    def post(self,request):
+        email = request.POST.get('email','')
+        code = request.POST.get('code','')
+
+        record = EmailVerifyRecord.objects.filter(code = code)
+        
+        if record:
+            request.user.email = email
+            request.user.save()
+
+            return HttpResponse('{"status":"success","msg":"修改成功"}',content_type = 'application/json')
+        else:
+            return HttpResponse('{"email":"验证码失效"}',content_type = 'application/json')
+
+
+class UserBlogView(LoginRequiredMixin,View):
+    '''
+    用户博客
+    '''
+    def get(self,request):
+        all_blogs = Blog.objects.filter(author = request.user)
+
+        sort = request.GET.get('sort','')
+
+        if sort == 'add_time':
+            all_blogs = all_blogs.order_by('-add_time')
+        elif sort == 'click':
+            all_blogs = all_blogs.order_by('-click_nums')
+        elif sort == 'fav':
+            all_blogs = all_blogs.order_by('-fav_nums')
+ 
+        return render(request,'usercenter_myblog.html',{
+            'all_blogs':all_blogs,
+            })
+
+
+class FavAuthorView(LoginRequiredMixin,View):
+    '''
+    fav用户
+    '''
+    def get(self,request):
+        #取出关注作者记录
+        records = UserFav.objects.filter(user=request.user,fav_type= 2)
+        #取出作者id
+        id_list = [each.fav_id for each in records]
+        #取出关注作者
+        all_authors = UserProfile.objects.filter(id__in = id_list)
+
+        return render(request,'usercenter_fav_author.html',{
+            'all_authors':all_authors,
+            })
+
+
+class FavBlogView(LoginRequiredMixin,View):
+    '''
+    fav博客
+    '''
+    def get(self,request):
+        #取出关注博客记录
+        records = UserFav.objects.filter(user=request.user,fav_type= 1)
+        #取出博客id
+        id_list = [each.fav_id for each in records]
+ 
+        #取出关注作者
+        all_blogs = Blog.objects.filter(id__in = id_list)
+
+        return render(request,'usercenter_fav_blog.html',{
+            'all_blogs':all_blogs,
+            })
+
+
+class UserMessageView(LoginRequiredMixin,View):
+    '''
+    用户消息
+    '''    
+    def get(self,request):
+        all_messages = UserMessage.objects.filter(user = request.user.id)
+
+        for message in all_messages:
+            message.has_read = True
+            message.save()
+
+        return render(request,'usercenter_message.html',{
+            'all_messages':all_messages,
+            })
+
+
+class UserMessageAllView(LoginRequiredMixin,View):
+    '''
+    用户消息
+    '''    
+    def get(self,request):
+        all_messages = UserMessage.objects.filter(user = 0)
+
+        for message in all_messages:
+            message.has_read = True
+            message.save()
+
+        return render(request,'usercenter_message_all.html',{
+            'all_messages':all_messages,
+            })

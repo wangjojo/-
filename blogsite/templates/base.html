@@ -29,7 +29,7 @@
 </head>
 
 <body id="blog">
-      <div id='cssmenu' class="align-center">
+    <div id='cssmenu' class="align-center">
       <ul>
           <li class=""><a href="{% url 'index' %}"><span>首页</span></a></li>
           <li class='has-sub'><a href='#'><span>分类</span></a>
@@ -42,7 +42,7 @@
           {% if request.user.is_authenticated %}
             <li class='has-sub'><a href='#'><span>{{ request.user.username }}</span></a>
               <ul>
-                  <li><a href="">进入个人中心</a></li>
+                  <li><a href="{% url 'user:user_info' %}">进入个人中心</a></li>
                   <li><a href="{% url 'logout' %}">退出</a></li>   
               </ul>
             </li>
@@ -63,7 +63,7 @@
               </div>
           </form>
       </ul>
-     </div>
+    </div>
 
 <header class="am-g am-g-fixed blog-fixed blog-text-center blog-header">
     <div class="am-u-sm-8 am-u-sm-centered">
@@ -80,10 +80,15 @@
 {% endblock banner %}
 <hr>
 <div class="am-g am-g-fixed blog-fixed">
+    {% block sidebar1 %}
+      
+    {% endblock sidebar1 %}
+
     {% block article %}
       
     {% endblock article %}
-
+    
+    {% block sidebar2 %}
     <div class="am-u-md-4 am-u-sm-12 blog-sidebar">
         <div class="blog-sidebar-widget blog-bor">
             <h2 class="blog-text-center blog-title"><span>About ME</span></h2>
@@ -93,6 +98,15 @@
         我是妹子UI，中国首个开源 HTML5 跨屏前端框架
         </p><p>我不想成为一个庸俗的人。十年百年后，当我们死去，质疑我们的人同样死去，后人看到的是裹足不前、原地打转的你，还是一直奔跑、走到远方的我？</p>
         </div>
+
+        <div class="blog-sidebar-widget blog-bor">
+            <h2 class="blog-text-center blog-title"><span>收藏</span></h2>
+            <p>
+            <button type="button" class="am-btn am-btn-primary">关注作者</button>
+            <button type="button" class="am-btn am-btn-primary">收藏博客</button>
+            </p>
+        </div>
+
         <div class="blog-sidebar-widget blog-bor">
             <h2 class="blog-text-center blog-title"><span>Contact ME</span></h2>
             <p>
@@ -114,6 +128,7 @@
             <a href="" class="blog-tag">开源前端框架</a>
             </div>
         </div>
+
         <div class="blog-sidebar-widget blog-bor">
             <h2 class="blog-title"><span>么么哒</span></h2>
             <ul class="am-list">
@@ -124,6 +139,7 @@
             </ul>
         </div>
     </div>
+    {% endblock sidebar2 %}
 </div>
 
 

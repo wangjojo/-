@@ -55,4 +55,10 @@ def send_user_email(email,send_type = 'register'):
             pass
 
     elif send_type == 'update_email':
-        pass
+        email_title = 'wangjojo更新邮箱验证码'
+        email_body = '你的验证码为：{0}'.format(code)
+
+        send_status = send_mail(email_title,email_body,DEFAULT_FROM_EMAIL,[email])
+
+        if send_status:
+            pass

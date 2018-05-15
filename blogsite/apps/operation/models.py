@@ -52,7 +52,7 @@ class UserMessage(models.Model):
         verbose_name_plural = verbose_name
 
     def __str__(self):
-        pass
+        return self.message[:10]
 
 
 class UserBlog(models.Model):

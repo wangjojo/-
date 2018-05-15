@@ -45,6 +45,8 @@ urlpatterns = [
 
     #blog相关
     url(r'^blog/',include('blog.urls',namespace = 'blog')),
+    #用户操作相关
+    url(r'^user/',include('operation.urls',namespace = 'user')),
     #上传文件访问地址
     url(r'^media/(?P<path>.*)/$',serve,{"document_root":MEDIA_ROOT}),
 

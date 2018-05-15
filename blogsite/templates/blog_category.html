@@ -14,9 +14,9 @@
             </div>
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
                 <span><a href="{% url 'blog:blog_detail' blog.id %}" class="blog-color">{{ blog.category.name }} &nbsp;</a></span>
-                <span> @amazeUI &nbsp;</span>
+                <span> {{ blog.author.nick_name }} &nbsp;</span>
                 <span>{{ blog.add_time }}</span>
-                <h1><a href="">{{ blog.title }}</a></h1>
+                <h1><a href="{% url 'blog:blog_detail' blog.id %}">{{ blog.title }}</a></h1>
                 <p>
                     {{ blog.content|slice:'100' }}
                 </p>

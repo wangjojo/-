@@ -7,6 +7,7 @@ class UserProfile(AbstractUser):
     birthday = models.DateField(null=True,blank=True,verbose_name='生日')
     gender = models.CharField(choices=(('male','男'),('female','女')),default='male',max_length=10,verbose_name='性别')
     desc = models.CharField(max_length=300,blank=True,verbose_name='个人简介')
+    sign = models.CharField(blank=True, max_length=80,verbose_name='个性签名')
     address = models.CharField(blank=True, max_length=100,verbose_name='地址')
     mobile = models.CharField(null=True,blank=True,max_length=11,verbose_name='手机号码')
     image = models.ImageField(upload_to='images/user/%Y/%m',default='images/user_default.png',blank=True,max_length=100,verbose_name='头像')

@@ -1,0 +1,56 @@
+{% extends "usercenter_base.html" %}
+
+{% load staticfiles %}
+
+{% block title %}
+    我的博客 | wangjojo的博客
+{% endblock title %}
+
+{% block custom_bread %}
+    <section>
+        <div class="wp">
+            <ul  class="crumbs">
+                <li><a href="{% url 'index' %}">首页</a>></li>
+                <li><a href="{% url 'user:user_info' %}">个人中心</a>></li>
+                <li>我的博客</li>
+            </ul>
+        </div>
+    </section>
+{% endblock custom_bread %}
+
+{% block rigth_content %}
+    <div class="right" >
+        <div class="personal_des Releasecont">
+            <div class="head">
+                <h1>我的博客&nbsp;&nbsp;</h1>
+                <button><a href="?sort=">&nbsp;&nbsp;默认排序&nbsp;&nbsp;</a></button>
+                <button><a href="?sort=add_time">&nbsp;&nbsp;时间排序&nbsp;&nbsp;</a></button>
+                <button><a href="?sort=click">&nbsp;&nbsp;点击排序&nbsp;&nbsp;</a></button>
+                <button><a href="?sort=fav">&nbsp;&nbsp;收藏排序&nbsp;&nbsp;</a></button>
+            </div>
+        </div>
+        <div class="personal_des permessage">
+            <div class="companycenter">
+                <div class="group_list brief">
+                {% for blog in all_blogs %}
+                    <div class="module1_5 box">
+                        <a href="{% url 'blog:blog_detail' blog.id %}">
+                            <img width="514" height="190" class="scrollLoading" src="{{ MEDIA_URL }}{{ blog.image }}"/>
+                        </a>
+                        <div class="des">
+                            <a href="{% url 'blog:blog_detail' blog.id %}"><h2>{{ blog.title }}</h2></a>
+                            <span class="fl">分类:<i class="key">{{ blog.category.name }}</i></span>
+                            <span class="fr">点击:{{ blog.click_nums }}</span>
+                        </div>
+                        <div class="bottom">
+                            <span class="fl">{{ blog.add_time }}</span>
+                            <span class="star fr  notlogin" data-favid="15">{{ blog.fav_nums }}</span>
+                        </div>
+                    </div>                    
+                {% endfor %}
+
+                </div>
+            </div>
+        </div>
+    </div>   
+{% endblock rigth_content %}
