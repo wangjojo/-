@@ -59,7 +59,7 @@
         <hr>
         
         <div data-am-collapse="{parent: '#collapase'}">
-        <button class="am-btn am-btn-primary" data-am-collapse="{parent: '#collapase',target: '#collapse-nav'}">我要评论</button>
+        <button class="am-btn am-btn-primary" data-am-collapse="{parent: '#collapase',target: '#collapse-nav'}">我要评论(需要登录)</button>
         <button style="float:right" class="am-btn am-btn-primary" data-am-collapse="{parent: '#collapase',target: '#collapse-pl'}">查看评论({{ comment_nums}}条)</button> 
 
         <form class="am-form am-g am-collapse" id="collapse-nav">
@@ -171,8 +171,6 @@
         if(comments == ""){
             alert("评论不能为空")
             return
-        }else{
-          alert(comments)
         }
         $.ajax({
             cache: false,

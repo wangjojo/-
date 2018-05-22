@@ -5,6 +5,7 @@
 from django import forms
 
 from .models import UserProfile
+from apps.blog.models import Blog
 from captcha.fields import CaptchaField
 
 class LoginForm(forms.Form):
@@ -26,3 +27,10 @@ class ResetPwdForm(forms.Form):
     email = forms.EmailField(required=True)
     password1 = forms.CharField(required=True,min_length=6)
     password2 = forms.CharField(required=True,min_length=6)
+
+
+class BlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = ('title','content','say','category','tag','image')
+    
