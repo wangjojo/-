@@ -25,7 +25,7 @@ sys.path.insert(0,os.path.join(BASE_DIR,'extra_apps'))
 SECRET_KEY = '^#3zta1!d-b%a#4q$=6dhpb4&l8!q!ofe@)t@52hlsvf=nc*%+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'xadmin',
     'crispy_forms',
     'captcha',
+    'DjangoUeditor',
+    'pure_pagination',
 ]
 
 AUTH_USER_MODEL = 'users.UserProfile'
@@ -92,8 +94,9 @@ DATABASES = {
         'NAME': 'blogsite',
         'USER':'root',
         'PASSWORD': 'fg498572715',
-        'HOST':'192.168.74.136',
-        'PORT':'3306'    }
+        'HOST':'192.168.74.137',
+        'PORT':'3306'
+    }
 }
 
 
@@ -132,15 +135,30 @@ USE_TZ = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
+#七牛云配置
+QINIU_ACCESS_KEY = 'RNowojsv8Ve2loqwf0HbADY4hS_A8fKkBHPH7xNi'
+QINIU_SECRET_KEY = '9K6IY38RZlRbGURu_0uYN_51qRxa8IYuzl4AghZD'
+QINIU_BUCKET_NAME = 'photo'
+QINIU_BUCKET_DOMAIN = 'wangjojo.top/'
+QINIU_SECURE_URL = False
+
+#STATICFILES_STORAGE  = 'qiniustorage.backends.QiniuStaticStorage'
+
+PREFIX_URL = 'http://'
+
 
 STATIC_URL = '/static/'
+'''
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR,'static'),
     )
-#STATIC_ROOT = '/static/'
+'''
+STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
+#MEDIA_URL = PREFIX_URL + QINIU_BUCKET_DOMAIN + BASE_DIR + '/media/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+#DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuMediaStorage'
 
 #邮件设置
 EMAIL_USE_SSL = True

@@ -8320,7 +8320,8 @@ ul.am-dropdown-content > .am-disabled > a:focus {
   display: block;
 }
 .am-slider .am-slides img {
-  width: 100%;
+  width: 80%;
+  height: 80%
   display: block;
 }
 .am-pauseplay span {

@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 # Create your models here.
@@ -13,6 +15,7 @@ class UserProfile(AbstractUser):
     image = models.ImageField(upload_to='images/user/%Y/%m',default='images/user_default.png',blank=True,max_length=100,verbose_name='头像')
     fav_nums = models.IntegerField(default=0,verbose_name='收藏数')
     click_nums = models.IntegerField(default=0,verbose_name='点击数')
+    add_time = models.DateTimeField(default=datetime.now,verbose_name='加入时间')
 
     class Meta:
         verbose_name='用户信息'

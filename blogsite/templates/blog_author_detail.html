@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load blog_tags %}
 {% block title %}
 作者详情 | wangjojo的博客
 {% endblock title%}
@@ -13,42 +14,48 @@
             <p>{{ author.desc }}</p>
             <button type="button" class="am-btn am-btn-primary" id="fav_author">{% if has_fav %}已关注{% else %}关注{% endif %}</button>
         </div>
-        <div class="blog-sidebar-widget blog-bor">
-            <h2 class="blog-text-center blog-title"><span>Contact ME</span></h2>
-            <p>
-                <a href=""><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
-                <a href=""><span class="am-icon-github am-icon-fw blog-icon"></span></a>
-                <a href=""><span class="am-icon-weibo am-icon-fw blog-icon"></span></a>
-                <a href=""><span class="am-icon-reddit am-icon-fw blog-icon"></span></a>
-                <a href=""><span class="am-icon-weixin am-icon-fw blog-icon"></span></a>
-            </p>
+
+        <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g">
+            <h2 class="blog-text-center blog-title"><span>归档</span></h2>
+            <div class="am-u-sm-12 blog-clear-padding">
+            {% archives as date_list %}
+              {% for date in date_list %}
+              <a href="{% url 'blog:blog_archives' date.year date.month %}" class="blog-tag">{{ date.year}}年{{ date.month }}月</a>
+            {% empty %}
+              暂无归档 
+            {% endfor %}
+            </div>
         </div>
+        
         <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g ">
             <h2 class="blog-title"><span>TAG cloud</span></h2>
             <div class="am-u-sm-12 blog-clear-padding">
-            <a href="" class="blog-tag">amaze</a>
-            <a href="" class="blog-tag">妹纸 UI</a>
-            <a href="" class="blog-tag">HTML5</a>
-            <a href="" class="blog-tag">这是标签</a>
-            <a href="" class="blog-tag">Impossible</a>
-            <a href="" class="blog-tag">开源前端框架</a>
+              {% get_tags as tag_list %}
+              {% for tag in tag_list %}
+              <a href="{% url 'blog:blog_tag' tag.id %}" class="blog-tag">{{ tag.name }}<span>({{ tag.num_blogs }})</span></a>
+              {% empty %}
+              暂无标签
+              {% endfor %}  
             </div>
-        </div>
+        </div> 
+
         <div class="blog-sidebar-widget blog-bor">
-            <h2 class="blog-title"><span>么么哒</span></h2>
+            <h2 class="blog-title"><span>热门博客</span></h2>
             <ul class="am-list">
-                <li><a href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a></li>
-                <li><a href="#">我把最深沉的秘密放在那里。</a></li>
-                <li><a href="#">你不懂我，我不怪你。</a></li>
-                <li><a href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a></li>
+              {% get_hot_blogs as hot_blogs%}
+              {% for blog in hot_blogs %}
+                <li><a href="{% url 'blog:blog_detail' blog.id %}">{{ blog.title}}</a></li>
+              {% endfor %}
+                
             </ul>
         </div>
+          
     </div>      
 {% endblock sidebar1 %}
 
 {% block article %}
     <div class="am-u-md-8 am-u-sm-12">
-        {% for blog in all_blogs %}
+        {% for blog in all_blogs.object_list %}
         <article class="am-g blog-entry-article">
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
                 <img src="{{ MEDIA_URL }}{{ blog.image }}" alt="" class="am-u-sm-12">
@@ -61,16 +68,38 @@
                 <p>{{ blog.content|slice:'100' }}</p>
                 <p><a href="{% url 'blog:blog_detail' blog.id %}">continue reading</a></p>
                 <hr>
-                <span>点击：</span><span>收藏</span>
+                <span class="blog-color3 fa fa-hand-pointer-o">：{{ blog.click_nums}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="blog-color2 fa fa-heart-o">：{{ blog.fav_nums}}</span>
             </div>
         </article>            
         {% endfor %}
 
   
-        <ul class="am-pagination">
-          <li class="am-pagination-prev"><a href="">&laquo; Prev</a></li>
-          <li class="am-pagination-next"><a href="">Next &raquo;</a></li>
+        <ul class="am-pagination am-pagination-centered">
+        {% if all_blogs.has_previous %}
+            <li class="am-pagination-prev"><a href="?{{ all_blogs.previous_page_number.querystring }}">&laquo; Prev</a></li>
+        {% else %}
+            <li class="am-pagination-prev"><span class="disabled prev">&laquo; Prev</span></li>
+        {% endif %}
+
+        {% for page in all_blogs.pages %}
+            {% if page %}
+                {% ifequal page all_blogs.number %}
+                <li class="am-active"><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                {% else %}
+                    <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                {% endifequal %}
+            {% else %}
+                <li class="None"><a href="#"></a>...</li>
+            {% endif %}
+        {% endfor %}
+
+        {% if all_blogs.has_next %}
+            <li class="am-pagination-next"><a href="?{{ all_blogs.next_page_number.querystring }}">Next &raquo;</a></li>
+        {% else %}
+            <li class="am-pagination-next"><span class="disabled prev">Next &raquo;</span></li>
+        {% endif %}
         </ul>
+
     </div>      
 {% endblock article %}
 

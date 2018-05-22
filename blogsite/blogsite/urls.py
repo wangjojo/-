@@ -21,9 +21,12 @@ from django.views.static import serve
 import xadmin
 from users.views import *
 from blogsite.settings import MEDIA_ROOT
+from DjangoUeditor import urls as DjangoUeditor_urls
 
 urlpatterns = [
     url(r'^admin/', xadmin.site.urls,name = 'admin'),
+    #富文本编辑器
+    url(r'^ueditor/',include(DjangoUeditor_urls)),
     #验证码
     url(r'^captcha/',include('captcha.urls')),
     #首页
@@ -49,6 +52,12 @@ urlpatterns = [
     url(r'^user/',include('operation.urls',namespace = 'user')),
     #上传文件访问地址
     url(r'^media/(?P<path>.*)/$',serve,{"document_root":MEDIA_ROOT}),
+    #测试环境关闭debug
+    #url(r'^static/(?P<path>.*)/$',serve,{"document_root":STATIC_ROOT})
 
 
 ]
+
+handler404 = 'users.views.page_not_found'
+handler500 = 'users.views.page_erorr_500'
+handler403 = 'users.views.page_erorr_403'

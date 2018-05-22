@@ -3,10 +3,12 @@ from datetime import datetime
 from django.db import models
 
 from users.models import UserProfile
+from DjangoUeditor.models import UEditorField
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=20,verbose_name='类别')
     nav_display = models.BooleanField(default=True,verbose_name='是否导航显示')
+    is_admin = models.BooleanField(default=False,verbose_name='管理权限')
     add_time = models.DateTimeField(default=datetime.now,verbose_name='添加时间')
 
     class Meta:
@@ -31,7 +33,7 @@ class Tag(models.Model):
 
 class Blog(models.Model):
     title = models.CharField(max_length=50,verbose_name='标题')
-    content = models.TextField(verbose_name='内容')
+    content = UEditorField(height=300, width=1000,default='', blank=True, imagePath="uploads/images/",toolbars='besttome', filePath='uploads/files/',verbose_name='内容')
     excerpt = models.CharField(blank=True, max_length=100,verbose_name='摘要')
     is_pub = models.BooleanField(default=True,verbose_name='是否发表')
     add_time = models.DateTimeField(auto_now_add=True,editable=True,verbose_name='发表时间')
@@ -39,6 +41,8 @@ class Blog(models.Model):
     image = models.ImageField(upload_to='images/blog/%Y/%m',default='images/blog_default.png',blank=True,max_length=100,verbose_name='封面')
     fav_nums = models.IntegerField(default=0,verbose_name='收藏数')
     click_nums = models.IntegerField(default=0,verbose_name='点击数')
+    want_to_say = models.CharField(blank=True, max_length=200,verbose_name='想说的话')
+    is_banner = models.BooleanField(default=False,verbose_name='是否轮播')
 
     category = models.ForeignKey(Category,verbose_name='分类')
     tags = models.ManyToManyField(Tag,blank=True,verbose_name='标签')

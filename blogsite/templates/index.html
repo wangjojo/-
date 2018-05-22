@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load blog_tags %}
 {% block title %}
   首页 | wangjojo的博客
 {% endblock title %}
@@ -8,28 +9,42 @@
 <div class="am-g am-g-fixed blog-fixed am-u-sm-centered blog-article-margin">
     <div data-am-widget="slider" class="am-slider am-slider-b1" data-am-slider='{&quot;controlNav&quot;:false}' >
     <ul class="am-slides">
-      <li>
-            <img src="{% static 'images/b1.jpg' %}">
+        {% for blog in banner_blogs %}
+        <li>
+            <img width="1000px" height="500px" src="{{MEDIA_URL}}{{ blog.image }}">
             <div class="blog-slider-desc am-slider-desc ">
                 <div class="blog-text-center blog-slider-con">
-                    <span><a href="" class="blog-color">Article &nbsp;</a></span>               
-                    <h1 class="blog-h-margin"><a href="">总在思考一句积极的话</a></h1>
-                    <p>那时候刚好下着雨，柏油路面湿冷冷的，还闪烁着青、黄、红颜色的灯火。
+                    <span><a href="{% url 'blog:blog_category' blog.category.id %}" class="blog-color">{{ blog.category.name}} &nbsp;</a></span>               
+                    <h1 class="blog-h-margin"><a href=":blog_detail' blog.id %}">{{ blog.title}}</a></h1>
+                    <p>{{ blog.content|safe|slice:'30' }}
                     </p>
-                    <span class="blog-bor">2015/10/9</span>
-             
+                    <span class="blog-bor">{{ blog.add_time }}</span>
                 </div>
             </div>
-      </li>
+        </li>            
+        {% endfor %}
+
 
     </ul>
     </div>
 </div>
 {% endblock banner %}
 <!-- content srart -->
+{% block author %}
+<div class="blog-sidebar-widget blog-bor">
+    <h2 class="blog-text-center blog-title"><span>About ME</span></h2>
+    <img src="{% static 'images/myfav.jpg' %}" alt="about me" class="blog-entry-img" >
+    <p>王华杰</p>
+    <p>我是博客的开发者</p>
+    <p>斯是陋室，惟吾德馨。希望能通过我的所学所获，把这个地方变得越来越好</p>
+    <p><a href=""></a></p>
+</div>          
+{% endblock author %}
+
+
 {% block article %}
     <div class="am-u-md-8 am-u-sm-12">
-        {% for blog in blogs %}
+        {% for blog in all_blogs.object_list %}
         <article class="am-g blog-entry-article">
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
 
@@ -40,16 +55,40 @@
                 <span><a href="{% url 'blog:blog_author' blog.author.id %}">{{ blog.author.nick_name }}</a> &nbsp;</span>
                 <span>{{ blog.add_time }}</span>
                 <h1><a href="{% url 'blog:blog_detail' blog.id %}">{{ blog.title}}</a></h1>
-                <p>{{ blog.content|slice:'100' }}
+                <p>{{ blog.content|safe|slice:'100' }}
                 </p>
                 <p><a href="{% url 'blog:blog_detail' blog.id %}">continue reading</a></p>
+                <hr>
+                <span class="blog-color3 fa fa-hand-pointer-o">：{{ blog.click_nums}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="blog-color2 fa fa-heart-o">：{{ blog.fav_nums}}</span>
             </div>
         </article>
         {% endfor %}
 
-        <ul class="am-pagination">
-          <li class="am-pagination-prev"><a href="">&laquo; Prev</a></li>
-          <li class="am-pagination-next"><a href="">Next &raquo;</a></li>
+        <ul class="am-pagination am-pagination-centered">
+        {% if all_blogs.has_previous %}
+            <li class="am-pagination-prev"><a href="?{{ all_blogs.previous_page_number.querystring }}">&laquo; Prev</a></li>
+        {% else %}
+            <li class="am-pagination-prev"><span class="disabled prev">&laquo; Prev</span></li>
+        {% endif %}
+
+        {% for page in all_blogs.pages %}
+            {% if page %}
+                {% ifequal page all_blogs.number %}
+                <li class="am-active"><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                {% else %}
+                    <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                {% endifequal %}
+            {% else %}
+                <li class="None"><a href="#"></a>...</li>
+            {% endif %}
+        {% endfor %}
+
+        {% if all_blogs.has_next %}
+            <li class="am-pagination-next"><a href="?{{ all_blogs.next_page_number.querystring }}">Next &raquo;</a></li>
+        {% else %}
+            <li class="am-pagination-next"><span class="disabled prev">Next &raquo;</span></li>
+        {% endif %}
         </ul>
+
     </div>        
 {% endblock article %}

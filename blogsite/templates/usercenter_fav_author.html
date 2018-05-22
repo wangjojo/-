@@ -33,7 +33,7 @@
                     </ul>
                 </div>
                 <div class="messagelist">
-                {% for author in all_authors %}
+                {% for author in all_authors.object_list %}
                     <div class=" butler_list butler-fav-box">
                         <dl class="des users">
                             <dt>
@@ -56,10 +56,38 @@
                                     <li class="c7">xxx：<span>xxx</span></li>
                                 </ul>
                             </dd>
-                            <div class="delete jsDeleteFav_teacher" data-favid="1"></div>
+                            <div class="delete jsDeleteFav_author" data-favid="{{ author.id }}"></div>
                         </dl>
                     </div>                       
                    {% endfor %}   
+
+                    <div class="pageturn">
+                        <ul class="pagelist">
+                        {% if all_authors.has_previous %}
+                            <li class="long"><a href="?{{ all_authors.previous_page_number.querystring }}">上一页</a></li>
+                        {% else %}
+                            <li class="long"><span class="disabled prev">上一页</span></li>
+                        {% endif %}
+
+                        {% for page in all_authors.pages %}
+                            {% if page %}
+                                {% ifequal page all_authors.number %}
+                                <li class="active"><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                                {% else %}
+                                    <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                                {% endifequal %}
+                            {% else %}
+                                <li class="None"><a href="#"></a>...</li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if all_authors.has_next %}
+                            <li class="long"><a href="?{{ all_authors.next_page_number.querystring }}">下一页</a></li>
+                        {% else %}
+                            <li class="long"><span class="disabled prev">下一页</span></li>
+                        {% endif %}
+                        </ul>
+                    </div>
 
                 </div>
             </div>

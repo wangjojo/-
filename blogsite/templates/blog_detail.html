@@ -11,8 +11,8 @@
         <div class="am-article-hd">
           <h1 class="am-article-title blog-text-center">{{ blog.title }}</h1>
           <p class="am-article-meta blog-text-center">
-              <span><a href="#" class="blog-color">article &nbsp;</a></span>-
-              <span><a href="#">@amazeUI &nbsp;</a></span>-
+              <span><a href="{% url 'blog:blog_category' blog.category.id %}" class="blog-color">{{ blog.category.name }} &nbsp;</a></span>-
+              <span><a href="{% url 'blog:blog_author' blog.author.id %}">{{ blog.author.nick_name }} &nbsp;</a></span>-
               <span><a href="#">{{ blog.add_time }}</a></span>
           </p>
         </div>
@@ -46,131 +46,157 @@
             <img src="{{ MEDIA_URL }}{{ blog.author.image }}" alt="" class="blog-author-img am-circle">
           </div>
           <div class="am-u-sm-9 am-u-md-9 am-u-lg-10">
-          <h3><span>作者 &nbsp;: &nbsp;</span><span class="blog-color">amazeui</span></h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <h3><span>作者 &nbsp;: &nbsp;</span><span class="blog-color">{{ blog.author.nick_name }}</span></h3>
+            <p>{% if blog.want_to_say %}
+              {{ blog.want_to_say }}
+            {% elif blog.author.sign %}
+              {{ blog.author.sign }}
+            {% else %}
+              我没有什么想说的
+            {% endif %}</p>
           </div>
         </div>
         <hr>
-
-        <ul class="am-pagination blog-article-margin">
-          <li class="am-pagination-prev"><a href="#" class="">&laquo; 一切的回顾</a></li>
-          <li class="am-pagination-next"><a href="">不远的未来 &raquo;</a></li>
-        </ul>
         
-        <hr>
+        <div data-am-collapse="{parent: '#collapase'}">
+        <button class="am-btn am-btn-primary" data-am-collapse="{parent: '#collapase',target: '#collapse-nav'}">我要评论</button>
+        <button style="float:right" class="am-btn am-btn-primary" data-am-collapse="{parent: '#collapase',target: '#collapse-pl'}">查看评论({{ comment_nums}}条)</button> 
 
-        <form class="am-form am-g">
-            <h3 class="blog-comment">评论</h3>
-          <fieldset>
-            <div class="am-form-group am-u-sm-4 blog-clear-left">
-              <input type="text" class="" placeholder="名字">
-            </div>
-            <div class="am-form-group am-u-sm-4">
-              <input type="email" class="" placeholder="邮箱">
-            </div>
+        <form class="am-form am-g am-collapse" id="collapse-nav">
+            {% csrf_token %}
+            <fieldset>
 
-            <div class="am-form-group am-u-sm-4 blog-clear-right">
-              <input type="password" class="" placeholder="网站">
-            </div>
-        
-            <div class="am-form-group">
-              <textarea class="" rows="5" placeholder="一字千金"></textarea>
-            </div>
-        
-            <p><button type="submit" class="am-btn am-btn-default">发表评论</button></p>
-          </fieldset>
+              <div id="editor"></div>
+              <p><button id="js-pl-submit" type="submit" class="am-btn am-btn-default">发表评论</button></p>
+
+            </fieldset>
         </form>
 
         <hr>
+        
+        <div id="collapse-pl">
+          {% for comment in all_comments %}
+          <p>
+            <div class="am-g blog-author blog-article-margin">
+              <div class="am-u-sm-3 am-u-md-3 am-u-lg-2">
+                <img src="{{ MEDIA_URL }}{{ comment.user.image }}" alt="" class="blog-author-img am-circle">
+              </div>
+              <div class="am-u-sm-9 am-u-md-9 am-u-lg-10">
+              <h3><span class="blog-color">{{ comment.user.nick_name }}&nbsp;&nbsp;说：</span></h3>
+                <p>{{ comment.content }}</p>
+                <a href="#" style="float:right">回复</a>
+              </div>
+            </div>
+          </p>
+          <hr>
+          {% empty %}
+          <p>暂无评论哦</p>           
+          {% endfor %}
+        </div>
+        </div>
     </div>
 {% endblock article %}
 
-{% block sidebar2 %}
-<div class="am-u-md-4 am-u-sm-12 blog-sidebar">
+{% block author %}
     <div class="blog-sidebar-widget blog-bor">
         <h2 class="blog-text-center blog-title"><span>About ME</span></h2>
         <a href="{% url 'blog:blog_author' blog.author.id %}"><img src="{{ MEDIA_URL }}{{ blog.author.image }}" alt="about me" class="blog-entry-img" ></a>
         <a href="{% url 'blog:blog_author' blog.author.id %}"><p>{{ blog.author.nick_name}}</p></a>
         <p>{{ blog.author.desc }}</p>
-    </div>
+    </div>  
+{% endblock author %}
 
+{% block fav %}
     <div class="blog-sidebar-widget blog-bor">
         <h2 class="blog-text-center blog-title"><span>收藏</span></h2>
         <p>
         <button id='fav_blog' type="button" class="am-btn am-btn-primary">{% if blog_has_fav %}已收藏博客{% else %}收藏博客{% endif %}</button>
         <button id='fav_author' type="button" class="am-btn am-btn-primary">{% if author_has_fav %}已关注作者{% else %}关注作者{% endif %}</button>
         </p>
-    </div>
+    </div>  
+{% endblock fav %}
 
-    <div class="blog-sidebar-widget blog-bor">
-        <h2 class="blog-text-center blog-title"><span>Contact ME</span></h2>
-        <p>
-            <a href=""><span class="am-icon-qq am-icon-fw am-primary blog-icon"></span></a>
-            <a href=""><span class="am-icon-github am-icon-fw blog-icon"></span></a>
-            <a href=""><span class="am-icon-weibo am-icon-fw blog-icon"></span></a>
-            <a href=""><span class="am-icon-reddit am-icon-fw blog-icon"></span></a>
-            <a href=""><span class="am-icon-weixin am-icon-fw blog-icon"></span></a>
-        </p>
-    </div>
-    <div class="blog-clear-margin blog-sidebar-widget blog-bor am-g ">
-        <h2 class="blog-title"><span>TAG cloud</span></h2>
-        <div class="am-u-sm-12 blog-clear-padding">
-        <a href="" class="blog-tag">amaze</a>
-        <a href="" class="blog-tag">妹纸 UI</a>
-        <a href="" class="blog-tag">HTML5</a>
-        <a href="" class="blog-tag">这是标签</a>
-        <a href="" class="blog-tag">Impossible</a>
-        <a href="" class="blog-tag">开源前端框架</a>
-        </div>
-    </div>
 
-    <div class="blog-sidebar-widget blog-bor">
-        <h2 class="blog-title"><span>么么哒</span></h2>
-        <ul class="am-list">
-            <li><a href="#">每个人都有一个死角， 自己走不出来，别人也闯不进去。</a></li>
-            <li><a href="#">我把最深沉的秘密放在那里。</a></li>
-            <li><a href="#">你不懂我，我不怪你。</a></li>
-            <li><a href="#">每个人都有一道伤口， 或深或浅，盖上布，以为不存在。</a></li>
-        </ul>
-    </div>
-</div>
-{% endblock sidebar2 %}
 
 {% block custom_js %}
+<script type="text/javascript" src="{% static 'js/wangEditor.min.js' %}"></script>
 <script type="text/javascript">
-//收藏分享
-function add_fav(current_elem, fav_id, fav_type){
-    $.ajax({
-        cache: false,
-        type: "POST",
-        url:"{% url 'user:add_fav' %}",
-        data:{'fav_id':fav_id, 'fav_type':fav_type},
-        async: true,
-        beforeSend:function(xhr, settings){
-            xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}' );
-        },
-        success: function(data) {
-            if(data.status == 'fail'){
-                if(data.msg == '用户未登录'){
-                    window.location.href="{% url 'login' %}";
-                }else{
-                    alert(data.msg)
+    var E = window.wangEditor
+    var editor = new E('#editor')
+    // 或者 var editor = new E( document.getElementById('editor') )
+    editor.create()
+</script>
+
+<script type="text/javascript">
+  //收藏分享
+  function add_fav(current_elem, fav_id, fav_type){
+      $.ajax({
+          cache: false,
+          type: "POST",
+          url:"{% url 'user:add_fav' %}",
+          data:{'fav_id':fav_id, 'fav_type':fav_type},
+          async: true,
+          beforeSend:function(xhr, settings){
+              xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}' );
+          },
+          success: function(data) {
+              if(data.status == 'fail'){
+                  if(data.msg == '用户未登录'){
+                      window.location.href="{% url 'login' %}";
+                  }else{
+                      alert(data.msg)
+                  }
+
+              }else if(data.status == 'success'){
+                  current_elem.text(data.msg)
+              }
+          },
+      });
+  }
+
+  $('#fav_author').on('click', function(){
+      add_fav($(this), {{ blog.author.id }}, 2);
+  });
+
+  $('#fav_blog').on('click', function(){
+      add_fav($(this), {{ blog.id }}, 1);
+  });
+</script>
+
+<script type="text/javascript">
+    //添加评论
+    $('#js-pl-submit').on('click', function(){
+        /*var comments = $("#js-pl-textarea").val()*/
+        var comments = editor.txt.text()
+        if(comments == ""){
+            alert("评论不能为空")
+            return
+        }else{
+          alert(comments)
+        }
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url:"{% url 'blog:add_comment' %}",
+            data:{'blog_id':{{ blog.id }}, 'comments':comments},
+            async: true,
+            beforeSend:function(xhr, settings){
+                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+            },
+            success: function(data) {
+                if(data.status == 'fail'){
+                    if(data.msg == '用户未登录'){
+                        window.location.href="{% url 'login' %}";
+                    }else{
+                        alert(data.msg)
+                    }
+
+                }else if(data.status == 'success'){
+                    window.location.reload();//刷新当前页面.
                 }
-
-            }else if(data.status == 'success'){
-                current_elem.text(data.msg)
-            }
-        },
+            },
+        });
     });
-}
-
-$('#fav_author').on('click', function(){
-    add_fav($(this), {{ blog.author.id }}, 2);
-});
-
-$('#fav_blog').on('click', function(){
-    add_fav($(this), {{ blog.id }}, 1);
-});
 
 </script>
 {% endblock custom_js %}    

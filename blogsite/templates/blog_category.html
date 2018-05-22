@@ -7,28 +7,52 @@
 
 {% block article %}
     <div class="am-u-md-8 am-u-sm-12">
-    {% for blog in blogs %}
+    {% for blog in all_blogs.object_list %}
         <article class="am-g blog-entry-article">
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-img">
                 <img src="{{ MEDIA_URL}}{{ blog.image }}" alt="" class="am-u-sm-12">
             </div>
             <div class="am-u-lg-6 am-u-md-12 am-u-sm-12 blog-entry-text">
                 <span><a href="{% url 'blog:blog_detail' blog.id %}" class="blog-color">{{ blog.category.name }} &nbsp;</a></span>
-                <span> {{ blog.author.nick_name }} &nbsp;</span>
+                <span><a href="{% url 'blog:blog_author' blog.author.id %}">{{ blog.author.nick_name }}</a> &nbsp;</span>
                 <span>{{ blog.add_time }}</span>
                 <h1><a href="{% url 'blog:blog_detail' blog.id %}">{{ blog.title }}</a></h1>
                 <p>
                     {{ blog.content|slice:'100' }}
                 </p>
                 <p><a href="{% url 'blog:blog_detail' blog.id %}">continue reading</a></p>
+                <hr>
+                <span class="blog-color3 fa fa-hand-pointer-o">：{{ blog.click_nums}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="blog-color2 fa fa-heart-o">：{{ blog.fav_nums}}</span>
             </div>
         </article>        
     {% endfor %}
 
-        
-        <ul class="am-pagination">
-          <li class="am-pagination-prev"><a href="">&laquo; Prev</a></li>
-          <li class="am-pagination-next"><a href="">Next &raquo;</a></li>
+        <ul class="am-pagination am-pagination-centered">
+        {% if all_blogs.has_previous %}
+            <li class="am-pagination-prev"><a href="?{{ all_blogs.previous_page_number.querystring }}">&laquo; Prev</a></li>
+        {% else %}
+            <li class="am-pagination-prev"><span class="disabled prev">&laquo; Prev</span></li>
+        {% endif %}
+
+        {% for page in all_blogs.pages %}
+            {% if page %}
+                {% ifequal page all_blogs.number %}
+                <li class="am-active"><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                {% else %}
+                    <li><a href="?{{ page.querystring }}" class="page">{{ page }}</a></li>
+                {% endifequal %}
+            {% else %}
+                <li class="None"><a href="#"></a>...</li>
+            {% endif %}
+        {% endfor %}
+
+        {% if all_blogs.has_next %}
+            <li class="am-pagination-next"><a href="?{{ all_blogs.next_page_number.querystring }}">Next &raquo;</a></li>
+        {% else %}
+            <li class="am-pagination-next"><span class="disabled prev">Next &raquo;</span></li>
+        {% endif %}
         </ul>
+
+
     </div>
 {% endblock article %}

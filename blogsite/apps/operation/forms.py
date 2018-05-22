@@ -5,6 +5,8 @@
 from django import forms
 
 from users.models import UserProfile
+from blog.models import Blog
+
 
 class UserImageForm(forms.ModelForm):
     class Meta:
@@ -20,5 +22,13 @@ class UserInfoForm(forms.ModelForm):
 class ModifyPwdForm(forms.Form):
     password1 = forms.CharField(required=True,min_length=6)
     password2 = forms.CharField(required=True,min_length=6)
+
+
+class WriteBlogForm(forms.ModelForm):
+    class Meta:
+        model = Blog
+        fields = ('title','content','image','category','tags')
+    
+
     
     

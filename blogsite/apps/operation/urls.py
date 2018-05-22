@@ -29,4 +29,6 @@ urlpatterns = [
     url(r'^message_all/$',UserMessageAllView.as_view(),name = 'user_message_all'),  
     #添加收藏
     url(r'^add_fav/$',AddFavView.as_view(),name = 'add_fav'),
+    #写博客
+    url(r'^write_blog/$',WriteBlogView.as_view(),name = 'write_blog'),
 ]

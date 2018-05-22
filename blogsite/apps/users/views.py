@@ -8,8 +8,9 @@ from django.contrib.auth.hashers import make_password
 
 from blog.models import Blog
 from .forms import *
-from .models import UserProfile,EmailVerifyRecord
+from .models import UserProfile,EmailVerifyRecord,Banner
 from utils.email_send import send_user_email
+from utils.pagination import paging
 # Create your views here.
 
 class CustomBackend(ModelBackend):
@@ -24,17 +25,22 @@ class CustomBackend(ModelBackend):
         except Exception as e:
             return None
 
-
 class IndexView(View):
     '''
     首页
     '''
     def get(self,request):
-        blogs = Blog.objects.all()
-        return render(request,'index.html',{
-            'blogs':blogs,
-            })
+        all_blogs = Blog.objects.all().order_by('-add_time')
 
+        blogs = paging(all_blogs,request = request)
+
+        #轮播博客
+        banner_blogs = Blog.objects.filter(is_banner = True).order_by('-add_time')
+
+        return render(request,'index.html',{
+            'all_blogs':blogs,
+            'banner_blogs':banner_blogs,
+            })
 
 class LoginView(View):
     '''
@@ -222,3 +228,22 @@ class ResetPwdView(View):
                 'email':email,
                 'msg':'输入错误'
                 })
+
+
+def page_not_found(request):
+    from django.shortcuts import render_to_response
+    response = render_to_response('404.html',{})
+    response.status_code = 404
+    return response
+
+def page_erorr_500(request):
+    from django.shortcuts import render_to_response
+    response = render_to_response('500.html',{})
+    response.status_code = 500
+    return response
+
+def page_erorr_403(request):
+    from django.shortcuts import render_to_response
+    response = render_to_response('403.html',{})
+    response.status_code = 403
+    return response

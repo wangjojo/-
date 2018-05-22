@@ -337,6 +337,12 @@ h1 span{
 .blog-color {
     color:#10D07A;
 }
+.blog-color2 {
+    color:red;
+}
+.blog-color3 {
+    color:blue;
+}
 .blog-continue {
     color:#000;
     border:0.2rem solid gray;
