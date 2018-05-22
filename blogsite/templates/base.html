@@ -43,7 +43,7 @@
             </ul>
           
           {% if request.user.is_authenticated %}
-            <li class='has-sub'><a href='#'><span>{{ request.user.username }}</span></a>
+            <li class='has-sub'><a href='#'><span>{{ request.user.nick_name|default:'新用户_' + request.user.id }}</span></a>
               <ul>
                   <li><a href="{% url 'user:user_info' %}">进入个人中心</a></li>
                   <li><a href="{% url 'logout' %}">退出</a></li>   
