@@ -157,7 +157,6 @@ STATICFILES_DIRS = (
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
 MEDIA_URL = PREFIX_URL + QINIU_BUCKET_DOMAIN + BASE_DIR + '/media/'
-MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuMediaStorage'
 
