@@ -109,7 +109,7 @@
             cache: false,
             type: "POST",
             url:"{% url 'user:write_blog' %}",
-            data:{'title':title, 'content':content,'say':say,'image':image,'category':category,'tag':tag},
+            data:{'title':title, 'content':content,'want_to_say':say,'image':image,'category':category,'tag':tag},
             async: true,
             beforeSend:function(xhr, settings){
                 xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");

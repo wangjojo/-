@@ -264,7 +264,7 @@ class WriteBlogView(LoginRequiredMixin,View):
         if blog_form.is_valid():    
             title = blog_form.cleaned_data['title']
             content = blog_form.cleaned_data['content']
-            say = blog_form.cleaned_data['say']
+            say = blog_form.cleaned_data['want_to_say']
             category = blog_form.cleaned_data['category']
             tag = blog_form.cleaned_data['tag']
             image = blog_form.cleaned_data['image']

@@ -27,7 +27,7 @@ class ModifyPwdForm(forms.Form):
 class WriteBlogForm(forms.ModelForm):
     class Meta:
         model = Blog
-        fields = ('title','content','say','image','category','tags')
+        fields = ('title','content','want_to_say','image','category','tags')
     
 
     
