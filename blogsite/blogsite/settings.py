@@ -94,7 +94,8 @@ DATABASES = {
         'NAME': 'blogsite',
         'USER':'root',
         'PASSWORD': 'fg498572715',
-        'HOST':'192.168.74.137',
+        #'HOST':'192.168.74.137',
+        'HOST': '39.106.131.162'
         'PORT':'3306'
     }
 }
@@ -155,10 +156,10 @@ STATICFILES_DIRS = (
 '''
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
-#MEDIA_URL = PREFIX_URL + QINIU_BUCKET_DOMAIN + BASE_DIR + '/media/'
+MEDIA_URL = PREFIX_URL + QINIU_BUCKET_DOMAIN + '/media/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-#DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuMediaStorage'
+DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuMediaStorage'
 
 #邮件设置
 EMAIL_USE_SSL = True
