@@ -31,7 +31,7 @@
                     {% else %}
                         <div class="personal">
                             <dl class="user fr">
-                                <dd>{{ request.user.nick_name|default:'新用户_' + request.user.id }}<img class="down fr" src="/static/images/top_down.png"/></dd>
+                                <dd>{{ request.user.nick_name }}<img class="down fr" src="/static/images/top_down.png"/></dd>
                                 <dt><img width="20" height="20" src="{{MEDIA_URL}}{{ request.user.image}}"/></dt>
                             </dl>
                             <div class="userdetail">
@@ -39,7 +39,7 @@
                                     <dt><img width="80" height="80" src="{{MEDIA_URL}}{{ request.user.image}}"/></dt>
                                     <dd>
                                         <h2>wangjojo</h2>
-                                        <p>{{ request.user.nick_name|default:'新用户_' + request.user.id }}</p>
+                                        <p>{{ request.user.nick_name }}</p>
                                     </dd>
                                 </dl>
                                 <div class="btn">
