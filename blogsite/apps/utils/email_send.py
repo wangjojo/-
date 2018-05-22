@@ -38,7 +38,7 @@ def send_user_email(email,send_type = 'register'):
 
     if send_type == 'register':
         email_title = 'wangjojo注册激活链接'
-        email_body = '访问链接，登录账号：http://192.168.74.136:8001/active/{0}'.format(code)
+        email_body = '访问链接，登录账号：http://www.wangjojo.top/active/{0}'.format(code)
 
         send_status = send_mail(email_title,email_body,DEFAULT_FROM_EMAIL,[email])
 
@@ -47,7 +47,7 @@ def send_user_email(email,send_type = 'register'):
 
     elif send_type == 'forget':
         email_title = 'wangjojo重置密码链接'
-        email_body = '访问链接，重置密码：http://192.168.74.136:8001/reset/{0}'.format(code)
+        email_body = '访问链接，重置密码：http://www.wangjojo.top/reset/{0}'.format(code)
 
         send_status = send_mail(email_title,email_body,DEFAULT_FROM_EMAIL,[email])
 
