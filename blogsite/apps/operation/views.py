@@ -260,12 +260,14 @@ class WriteBlogView(LoginRequiredMixin,View):
             })
 
     def post(self,request):
-        title = request.POST.get('title','')
-        content = request.POST.get('content','')
-        say = request.POST.get('say','')
-        category = request.POST.get('category','')
-        tag = request.POST.get('tag','')
-        image = request.POST.get('image','')
+        blog_form = WriteBlogForm(request.POST)
+        if blog_form.is_valid():    
+            title = blog_form.cleaned_data['title']
+            content = blog_form.cleaned_data['content']
+            say = blog_form.cleaned_data['say']
+            category = blog_form.cleaned_data['category']
+            tag = blog_form.cleaned_data['tag']
+            image = blog_form.cleaned_data['image']
 
         blog = Blog()
         blog.title = title
