@@ -26,7 +26,7 @@ SECRET_KEY = '^#3zta1!d-b%a#4q$=6dhpb4&l8!q!ofe@)t@52hlsvf=nc*%+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
-
+#DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 AUTHENTICATION_BACKENDS = ('users.views.CustomBackend',)
@@ -140,7 +140,7 @@ USE_TZ = False
 QINIU_ACCESS_KEY = 'RNowojsv8Ve2loqwf0HbADY4hS_A8fKkBHPH7xNi'
 QINIU_SECRET_KEY = '9K6IY38RZlRbGURu_0uYN_51qRxa8IYuzl4AghZD'
 QINIU_BUCKET_NAME = 'photo'
-QINIU_BUCKET_DOMAIN = 'wangjojo.top/'
+QINIU_BUCKET_DOMAIN = 'wangjojo.top'
 QINIU_SECURE_URL = False
 
 #STATICFILES_STORAGE  = 'qiniustorage.backends.QiniuStaticStorage'
@@ -156,10 +156,16 @@ STATICFILES_DIRS = (
 '''
 STATIC_ROOT = os.path.join(BASE_DIR,'static')
 
+#阿里云设置
+
 MEDIA_URL = PREFIX_URL + QINIU_BUCKET_DOMAIN + BASE_DIR + '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 DEFAULT_FILE_STORAGE = 'qiniustorage.backends.QiniuMediaStorage'
-
+'''
+#本地设置
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+'''
 #邮件设置
 EMAIL_USE_SSL = True
 EMAIL_HOST = 'smtp.qq.com'

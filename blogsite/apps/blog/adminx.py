@@ -32,6 +32,7 @@ class BlogAdmin(object):
     search_fields = ('title','excerpt','author','tags','category','is_pub','image','fav_nums','click_nums')
     list_filter = ('title','excerpt','author','tags__name','category__name','is_pub','image','fav_nums','click_nums','add_time','update_time')
     
+    style_fields = {'content':'ueditor'}
 
 xadmin.site.register(Category,CategoryAdmin)
 xadmin.site.register(Tag,TagAdmin)

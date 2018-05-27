@@ -29,7 +29,7 @@
                     <form role="form" id="writeblogForm" action="{% url 'user:write_blog' %}" method="post" >
                         {% csrf_token %}
                         <div class="form-group">
-                             <label for="exampleInputEmail1">博客标题</label>
+                             <label for="exampleInputEmail1">博客标题a</label>
                              <input id="js-title"type="text" class="form-control" name="title" />
                         </div>
                         <hr>
@@ -66,7 +66,7 @@
                             <label for="inputfile">博客封面</label>
                             <input id='js-image' type="file">
                         </div>
-                        <button id="js-submit" type="button" class="btn btn-default">提交</button>
+                        <button id="js-submit" type="submit" class="btn btn-default">提交</button>
                     </form>
                 </div>
             </div>
@@ -76,58 +76,4 @@
 
 {% block custom_js %}
 <script type="text/javascript" src="/static/js/wangEditor.min.js"></script>
-<script type="text/javascript">
-    var E = window.wangEditor
-    var editor = new E('#editor')
-    // 或者 var editor = new E( document.getElementById('editor') )
-    editor.customConfig.uploadImgShowBase64 = true   // 使用 base64 保存图片
-    editor.customConfig.showLinkImg = false
-
-    editor.create()
-</script>
-
-<script type="text/javascript">
-    $('#js-submit').on('click', function(){
-        /*var comments = $("#js-pl-textarea").val()*/
-        var title = $("#js-title").val()
-        var content = editor.txt.html()
-        var say = $("#js-say").val()
-        var category = $("#js-category").val()
-        var tag = String($("#js-tag").val())
-        var image = $("#js-image").val()
-
-        if(title == ""){
-            alert("博客标题不能为空")
-            return 
-        }
-        if(content == ""){
-            alert("博客内容不能为空")
-            return
-        }
-
-        $.ajax({
-            cache: false,
-            type: "POST",
-            url:"{% url 'user:write_blog' %}",
-            data:{'title':title, 'content':content,'say':say,'image':image,'category':category,'tag':tag},
-            async: true,
-            beforeSend:function(xhr, settings){
-                xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
-            },
-            success: function(data) {
-                if(data.status == 'fail'){
-                    if(data.msg == '用户未登录'){
-                        window.location.href="{% url 'login' %}";
-                    }else{
-                        alert('发布成功')
-                    }
-
-                }else if(data.status == 'success'){
-                    window.location.reload();//刷新当前页面.
-                }
-            },
-        });
-    });
-
-</script>
 {% endblock custom_js %}

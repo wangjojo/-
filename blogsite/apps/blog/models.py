@@ -33,7 +33,7 @@ class Tag(models.Model):
 
 class Blog(models.Model):
     title = models.CharField(max_length=50,verbose_name='标题')
-    content = UEditorField(height=300, width=1000,default='', blank=True, imagePath="uploads/images/",toolbars='besttome', filePath='uploads/files/',verbose_name='内容')
+    content = UEditorField(height=400, width=850,default='', blank=True, imagePath="uploads/images/",toolbars='besttome', filePath='uploads/files/',verbose_name='内容')
     excerpt = models.CharField(blank=True, max_length=100,verbose_name='摘要')
     is_pub = models.BooleanField(default=True,verbose_name='是否发表')
     add_time = models.DateTimeField(auto_now_add=True,editable=True,verbose_name='发表时间')

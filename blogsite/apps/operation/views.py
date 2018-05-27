@@ -248,27 +248,79 @@ class UserMessageAllView(LoginRequiredMixin,View):
             'all_messages':all_messages,
             })
 
-
+'''
 class WriteBlogView(LoginRequiredMixin,View):
     def get(self,request):
+        form = WriteBlogForm()
         categorys = Category.objects.filter(is_admin = False)
         tags = Tag.objects.all()
 
         return render(request,'usercenter_writeblog.html',{
             'categorys':categorys,
             'tags':tags,
+            'form':form,
             })
 
     def post(self,request):
-        blog_form = WriteBlogForm(request.POST)
-        if blog_form.is_valid():    
-            title = blog_form.cleaned_data['title']
-            content = blog_form.cleaned_data['content']
-            say = blog_form.cleaned_data['want_to_say']
-            category = blog_form.cleaned_data['category']
-            tag = blog_form.cleaned_data['tag']
-            image = blog_form.cleaned_data['image']
+        title = request.POST.get('title','')
+        content = request.POST.get('content','')
+        say = request.POST.get('say','')
+        image = request.POST.get('image','')
+        tag = request.POST.get('tag','')
+        category = request.POST.get('category','')
+        print(image)
+        blog = Blog()
+        blog.title = title
+        blog.content = content
+        #获取分类
+        category = Category.objects.get(name = category)
+        blog.category = category
+        #获取封面
+        if image:
+            blog.image = image
+        #获取作者想说的话,如果为空，则填入作者的个性签名
+        if not say:
+            blog.want_to_say = request.user.sign
+        else:
+            blog.want_to_say = say
 
+        blog.author = request.user
+        blog.save()
+        #获取标签
+        if tag:
+            tag_list = tag.split(',')
+            for tag in tag_list:
+                tag = Tag.objects.get(name = tag)
+                blog.tags.add(tag)
+
+        blog.save()
+
+
+        print('ok')
+
+        return HttpResponse('{"status":"success","msg":"发布成功"}',content_type = 'application/json')
+'''
+
+class WriteBlogView(LoginRequiredMixin,View):
+    def get(self,request):
+        categorys = Category.objects.filter(is_admin = False)
+        tags = Tag.objects.all()
+
+        return render(request,'writeblog2.html',{
+            'categorys':categorys,
+            'tags':tags,
+            })
+
+    def post(self,request):
+        form = WriteBlogForm(request.POST)
+        print(form)
+        title = request.POST.get('title','')
+        content = request.POST.get('content','')
+        say = request.POST.get('say','')
+        image = request.POST.get('image','')
+        tag = request.POST.get('tag','')
+        category = request.POST.get('category','')
+        print(image)
         blog = Blog()
         blog.title = title
         blog.content = content

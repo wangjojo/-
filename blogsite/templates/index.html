@@ -15,7 +15,7 @@
             <div class="blog-slider-desc am-slider-desc ">
                 <div class="blog-text-center blog-slider-con">
                     <span><a href="{% url 'blog:blog_category' blog.category.id %}" class="blog-color">{{ blog.category.name}} &nbsp;</a></span>               
-                    <h1 class="blog-h-margin"><a href=":blog_detail' blog.id %}">{{ blog.title}}</a></h1>
+                    <h1 class="blog-h-margin"><a href="{% url 'blog:blog_detail' blog.id %}">{{ blog.title}}</a></h1>
                     <p>{{ blog.content|safe|slice:'30' }}
                     </p>
                     <span class="blog-bor">{{ blog.add_time }}</span>
